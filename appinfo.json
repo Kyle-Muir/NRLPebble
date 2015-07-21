@@ -40,7 +40,7 @@
     "shortName": "NRL Matches",
     "uuid": "1a0830b6-0210-4b1d-abf4-2e056b19418c",
     "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": false
     }
