@@ -1,7 +1,9 @@
-var ajax   = require('ajax'),
-    ui     = require('ui'),
-    _      = require('underscore.js'),
-    moment = require('moment.js');
+var ajax          = require('ajax'),
+    ui            = require('ui'),
+    _             = require('underscore'),
+    moment        = require('moment'),
+    logger        = require('logger'),
+    models        = require('models');
 
 var card = new ui.Card({
     title: 'NRL Match ups',
@@ -10,35 +12,12 @@ var card = new ui.Card({
 
 card.show();
 
-function log(item, message) {
-    console.log('message: ' + message + ', object as JSON: ' + JSON.stringify(item));
-}
-
-function removeRoundFromName(name) {
-    return name.substring(name.indexOf(',') + 2);
-}
-
-function formatKickoff(kickoff) {
-    return moment(kickoff).format('ha, MMMM Do');
-}
-
-function Matchup(item) {
-    this.title = removeRoundFromName(item.Match);
-    this.kickOff = item.StartDate + 'Z';
-    this.venue = item.Venue;
-    this.date = moment(this.kickOff).format('MM-DD');
-}
-
-function formatBody(matchUp) {
-    return '\nKick off: ' + formatKickoff(matchUp.kickOff) + '\nVenue: ' + matchUp.venue;
-}
-
-function onSelect(e, matchUps) {
+function onSelect(e) {
     var selectedMatchUp = e.item;
     var detailCard = new ui.Card({
         title: 'Match details',
         subtitle: selectedMatchUp.title,
-        body: formatBody(selectedMatchUp),
+        body: selectedMatchUp.body,
         scrollable: true
     });
     detailCard.show();
@@ -47,7 +26,7 @@ function onSelect(e, matchUps) {
 function parseData(data) {
     var matchUps = [];
     data.forEach(function(item) {
-        var matchUp = new Matchup(item);
+        var matchUp = new models.Matchup(item);
         matchUps.push(matchUp);
     });
     return matchUps.sort(function(item) {
@@ -69,7 +48,7 @@ function createSections(matchUps) {
         _.each(itemsByDate, function(listItem) {
             menuItems.push({
                 title: listItem.title,
-                subtitle: formatKickoff(listItem.kickOff)
+                subtitle: listItem.formattedKickoff
             });
         });
 
@@ -88,10 +67,7 @@ function createAndShowMenuCard(matchUps) {
         sections: sections
     });
 
-    resultsMenu.on('select', function(e) {
-        onSelect(e, matchUps);
-    });
-
+    resultsMenu.on('select', onSelect);
     resultsMenu.show();
     card.hide();
 }
