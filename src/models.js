@@ -4,21 +4,16 @@ var Models = (function() {
         return name.substring(name.indexOf(',') + 2);
     }
 
-    function formatKickoff(kickoff) {
-        return moment(kickoff).format('ha, MMMM Do');
-    }
-
-    function formatBody(formattedKickoff, venue) {
-        return '\nKick off: ' + formattedKickoff + '\nVenue: ' + venue;
-    }
-
     function Matchup(item) {
-        this.title = removeRoundFromName(item.Match);
-        this.kickOff = item.StartDate + 'Z';
-        this.venue = item.Venue;
-        this.date = moment(this.kickOff).format('MM-DD');
-        this.formattedKickoff = formatKickoff(this.kickOff);
-        this.body = formatBody(this.formattedKickoff, this.venue);
+        var self = this;
+        self.title = removeRoundFromName(item.Match);
+        self.kickOff = item.StartDate + 'Z';
+        self.venue = item.Venue;
+        self.date = moment(self.kickOff).format('MM-DD');
+        self.formattedKickoff = moment(self.kickOff).format('h:mma, MMMM Do');
+        self.body = function() {
+          return '\nKick off: ' + self.formattedKickoff + '\nVenue: ' + self.venue;
+        };
     }
 
     return {

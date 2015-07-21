@@ -1,7 +1,7 @@
 {
     "appKeys": {},
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "Kyle Muir",
     "longName": "2015 NRL Weekly Match Ups",

@@ -17,7 +17,7 @@ function onSelect(e) {
     var detailCard = new ui.Card({
         title: 'Match details',
         subtitle: selectedMatchUp.title,
-        body: selectedMatchUp.body,
+        body: selectedMatchUp.body(),
         scrollable: true
     });
     detailCard.show();
@@ -29,9 +29,7 @@ function parseData(data) {
         var matchUp = new models.Matchup(item);
         matchUps.push(matchUp);
     });
-    return matchUps.sort(function(item) {
-        return item.date;
-    }).reverse();
+    return _.sortBy(matchUps, 'kickOff');
 }
 
 function createSections(matchUps) {
@@ -53,7 +51,7 @@ function createSections(matchUps) {
         });
 
         sections.push({
-            title: moment(item.kickOff).format('MMMM Do'),
+            title: moment(item.kickOff).format('ddd Do'),
             items: itemsByDate
         });
     });
